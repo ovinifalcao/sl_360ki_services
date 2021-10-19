@@ -1,6 +1,6 @@
 ﻿CREATE TABLE [dbo].[bs_Ocurrence_Report]
 (
-	[RPT_Id] INT NOT NULL,
+	[RPT_Id] INT NOT NULL IDENTITY(1,1),
 	[USRGD_Owner_fk] INT NOT NULL,
 	[Title] VARCHAR(200) NOT NULL,
 	[Kind_Id] INT NOT NULL,

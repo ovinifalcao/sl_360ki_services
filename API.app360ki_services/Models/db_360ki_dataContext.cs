@@ -4,15 +4,15 @@ using Microsoft.EntityFrameworkCore.Metadata;
 
 #nullable disable
 
-namespace App360ki_Services.Models
+namespace API.app360ki_services.Models
 {
-    public partial class db_360ki_servicesContext : DbContext
+    public partial class db_360ki_dataContext : DbContext
     {
-        public db_360ki_servicesContext()
+        public db_360ki_dataContext()
         {
         }
 
-        public db_360ki_servicesContext(DbContextOptions<db_360ki_servicesContext> options)
+        public db_360ki_dataContext(DbContextOptions<db_360ki_dataContext> options)
             : base(options)
         {
         }
@@ -28,7 +28,8 @@ namespace App360ki_Services.Models
         {
             if (!optionsBuilder.IsConfigured)
             {
-                optionsBuilder.UseSqlServer("Data Source=ITLNB070\\SQL2017;Initial Catalog=db_360ki_services;Integrated Security=True");
+#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
+                optionsBuilder.UseSqlServer("Data Source=ITLNB070\\SQL2017;Initial Catalog=db_360ki_data;Integrated Security=True");
             }
         }
 
@@ -39,13 +40,11 @@ namespace App360ki_Services.Models
             modelBuilder.Entity<BsOcurrenceReport>(entity =>
             {
                 entity.HasKey(e => e.RptId)
-                    .HasName("PK__bs_Ocurr__F6FF16C8CF44CB0D");
+                    .HasName("PK__bs_Ocurr__F6FF16C8CA067154");
 
                 entity.ToTable("bs_Ocurrence_Report");
 
-                entity.Property(e => e.RptId)
-                    .ValueGeneratedNever()
-                    .HasColumnName("RPT_Id");
+                entity.Property(e => e.RptId).HasColumnName("RPT_Id");
 
                 entity.Property(e => e.CityZoneId).HasColumnName("CityZone_Id");
 
@@ -87,7 +86,7 @@ namespace App360ki_Services.Models
             modelBuilder.Entity<BsOcurrencesReply>(entity =>
             {
                 entity.HasKey(e => new { e.RptFk, e.UsrgdFk })
-                    .HasName("PK__bs_Ocurr__08FE82DE1C8BA6D3");
+                    .HasName("PK__bs_Ocurr__08FE82DEC71E2F98");
 
                 entity.ToTable("bs_Ocurrences_Replies");
 
@@ -115,13 +114,11 @@ namespace App360ki_Services.Models
             modelBuilder.Entity<BsUserResgistered>(entity =>
             {
                 entity.HasKey(e => e.UsrgdId)
-                    .HasName("PK__bs_User___E0188153CBBBECAF");
+                    .HasName("PK__bs_User___E0188153C5DAB884");
 
                 entity.ToTable("bs_User_Resgistered");
 
-                entity.Property(e => e.UsrgdId)
-                    .ValueGeneratedNever()
-                    .HasColumnName("USRGD_Id");
+                entity.Property(e => e.UsrgdId).HasColumnName("USRGD_Id");
 
                 entity.Property(e => e.BirthDate).HasColumnType("date");
 
@@ -142,13 +139,11 @@ namespace App360ki_Services.Models
             modelBuilder.Entity<KdCityZone>(entity =>
             {
                 entity.HasKey(e => e.KdCtZnId)
-                    .HasName("PK__kd_City___52F4F9C6935388CC");
+                    .HasName("PK__kd_City___52F4F9C65A2B2E02");
 
                 entity.ToTable("kd_City_Zones");
 
-                entity.Property(e => e.KdCtZnId)
-                    .ValueGeneratedNever()
-                    .HasColumnName("Kd_Ct_Zn_Id");
+                entity.Property(e => e.KdCtZnId).HasColumnName("Kd_Ct_Zn_Id");
 
                 entity.Property(e => e.KdCtZnDesc)
                     .IsRequired()
@@ -160,13 +155,11 @@ namespace App360ki_Services.Models
             modelBuilder.Entity<KdOcurrence>(entity =>
             {
                 entity.HasKey(e => e.KdOcId)
-                    .HasName("PK__kd_Ocurr__077A6F1CF5F77E82");
+                    .HasName("PK__kd_Ocurr__077A6F1CA7A907AD");
 
                 entity.ToTable("kd_Ocurrences");
 
-                entity.Property(e => e.KdOcId)
-                    .ValueGeneratedNever()
-                    .HasColumnName("Kd_Oc_Id");
+                entity.Property(e => e.KdOcId).HasColumnName("Kd_Oc_Id");
 
                 entity.Property(e => e.KdOcDesc)
                     .IsRequired()
@@ -178,13 +171,11 @@ namespace App360ki_Services.Models
             modelBuilder.Entity<KdOcurrencesReply>(entity =>
             {
                 entity.HasKey(e => e.KdOcRpId)
-                    .HasName("PK__kd_Ocurr__3529AB4F846F6BAB");
+                    .HasName("PK__kd_Ocurr__3529AB4F79918AFE");
 
                 entity.ToTable("kd_Ocurrences_Replies");
 
-                entity.Property(e => e.KdOcRpId)
-                    .ValueGeneratedNever()
-                    .HasColumnName("Kd_Oc_Rp_Id");
+                entity.Property(e => e.KdOcRpId).HasColumnName("Kd_Oc_Rp_Id");
 
                 entity.Property(e => e.KdOcRpDesc)
                     .IsRequired()

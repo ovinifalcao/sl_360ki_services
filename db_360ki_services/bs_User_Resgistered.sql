@@ -1,6 +1,6 @@
 ﻿CREATE TABLE [dbo].[bs_User_Resgistered]
 (
-	[USRGD_Id] INT NOT NULL PRIMARY KEY,
+	[USRGD_Id] INT NOT NULL PRIMARY KEY IDENTITY(1,1),
 	[Name] varchar(500) NOT NULL,
 	[BirthDate] date NOT NULL,
 	[CityZone_Id] int NOT NULL

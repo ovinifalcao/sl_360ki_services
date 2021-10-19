@@ -7,7 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace App360ki_Services
+namespace API.app360ki_services
 {
     public class Program
     {

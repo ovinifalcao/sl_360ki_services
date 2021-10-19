@@ -65,4 +65,7 @@
     <Build Include="kd_Ocurrences_Replies.sql" />
     <Build Include="bs_Ocurrences_Replies.sql" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="InsertPrimaryData.sql" />
+  </ItemGroup>
 </Project>

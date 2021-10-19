@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 #nullable disable
 
-namespace App360ki_Services.Models
+namespace API.app360ki_services.Models
 {
     public partial class BsUserResgistered
     {
