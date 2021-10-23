@@ -8,11 +8,11 @@ namespace API.app360ki_services.Controllers.AirQuality
     [ApiController]
     public class AqicnAirQualityConsultant : ControllerBase
     {
-        [HttpGet]
-        public async Task<Models.AirQuality.AqicnData> GetAirQualityInfo()
+        [HttpGet("{lat},{lgt}")]
+        public async Task<Models.AirQuality.AqicnData> GetAirQualityInfo(double lat, double lgt)
         {
             var AirQuality = RestService.For<IAqicnAirQualityConsultant>("https://api.waqi.info");
-            return await AirQuality.GetAirQuality(-23.661852, -46.765892);
+            return await AirQuality.GetAirQuality(lat, lgt);
         }
     }
 }
