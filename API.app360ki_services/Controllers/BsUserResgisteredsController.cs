@@ -20,83 +20,17 @@ namespace API.app360ki_services.Controllers
             _context = context;
         }
 
-        // GET: api/BsUserResgistereds
-        [HttpGet]
-        public async Task<ActionResult<IEnumerable<BsUserResgistered>>> GetBsUserResgistereds()
-        {
-            return await _context.BsUserResgistereds.ToListAsync();
-        }
-
-        // GET: api/BsUserResgistereds/5
-        [HttpGet("{id}")]
-        public async Task<ActionResult<BsUserResgistered>> GetBsUserResgistered(int id)
-        {
-            var bsUserResgistered = await _context.BsUserResgistereds.FindAsync(id);
-
-            if (bsUserResgistered == null)
-            {
-                return NotFound();
-            }
-
-            return bsUserResgistered;
-        }
-
-        // PUT: api/BsUserResgistereds/5
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPut("{id}")]
-        public async Task<IActionResult> PutBsUserResgistered(int id, BsUserResgistered bsUserResgistered)
-        {
-            if (id != bsUserResgistered.UsrgdId)
-            {
-                return BadRequest();
-            }
-
-            _context.Entry(bsUserResgistered).State = EntityState.Modified;
-
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!BsUserResgisteredExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
-
-            return NoContent();
-        }
-
-        // POST: api/BsUserResgistereds
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<BsUserResgistered>> PostBsUserResgistered(BsUserResgistered bsUserResgistered)
+        public async Task<ActionResult<BsUserResgistered>> PostBsUserResgistered(Models.Application.UserCreationAppInfo userCreationAppInfo)
         {
-            _context.BsUserResgistereds.Add(bsUserResgistered);
+            _context.BsUserResgistereds.Add(userCreationAppInfo.bsUserResgistered);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction("GetBsUserResgistered", new { id = bsUserResgistered.UsrgdId }, bsUserResgistered);
-        }
-
-        // DELETE: api/BsUserResgistereds/5
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteBsUserResgistered(int id)
-        {
-            var bsUserResgistered = await _context.BsUserResgistereds.FindAsync(id);
-            if (bsUserResgistered == null)
-            {
-                return NotFound();
-            }
-
-            _context.BsUserResgistereds.Remove(bsUserResgistered);
+            userCreationAppInfo.opUserService.UsrgdFk = userCreationAppInfo.bsUserResgistered.UsrgdId;
+            _context.OpUserServices.Add(userCreationAppInfo.opUserService);
             await _context.SaveChangesAsync();
 
-            return NoContent();
+            return CreatedAtAction("GetBsUserResgistered", new { id = userCreationAppInfo.bsUserResgistered.UsrgdId }, userCreationAppInfo.bsUserResgistered);
         }
 
         private bool BsUserResgisteredExists(int id)

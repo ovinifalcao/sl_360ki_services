@@ -19,6 +19,7 @@ namespace API.app360ki_services.Models
         public int CityZoneId { get; set; }
 
         public virtual KdCityZone CityZone { get; set; }
+        public virtual OpUserService OpUserService { get; set; }
         public virtual ICollection<BsOcurrenceReport> BsOcurrenceReports { get; set; }
         public virtual ICollection<BsOcurrencesReply> BsOcurrencesReplies { get; set; }
     }

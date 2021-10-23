@@ -1,11 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using API.app360ki_services.Models;
+using Microsoft.AspNetCore.Authorization;
 
 namespace API.app360ki_services.Controllers
 {
@@ -20,61 +19,95 @@ namespace API.app360ki_services.Controllers
             _context = context;
         }
 
-        // GET: api/BsOcurrenceReports
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<BsOcurrenceReport>>> GetBsOcurrenceReports()
+        [AllowAnonymous]
+        public async Task<ActionResult<IEnumerable<Models.Application.ReportsAppInfo>>> GetBsOcurrenceReports()
         {
-            return await _context.BsOcurrenceReports.ToListAsync();
+            //await _context.BsOcurrenceReports.ToListAsync();
+            var reports = await _context.BsOcurrenceReports.ToListAsync();
+            var replies = await (from rp in _context.BsOcurrencesReplies
+                                 group rp by rp.RptFk into rp_Gp
+                                 select new
+                                 {
+                                     Report_Id = rp_Gp.Key,
+                                     Replies = new List<Models.Application.RepliesAppInfo>()
+                                     {
+                                         new Models.Application.RepliesAppInfo()
+                                         {
+                                            Reply_Type = 1,
+                                            Reply_Quantity = rp_Gp.Count(g => g.KindId == 1)
+                                         },
+                                         new Models.Application.RepliesAppInfo()
+                                         {
+                                            Reply_Type = 2,
+                                            Reply_Quantity = rp_Gp.Count(g => g.KindId == 2)
+                                         },
+                                         new Models.Application.RepliesAppInfo()
+                                         {
+                                            Reply_Type = 3,
+                                            Reply_Quantity = rp_Gp.Count(g => g.KindId == 3)
+                                         },
+                                         new Models.Application.RepliesAppInfo()
+                                         {
+                                            Reply_Type = 4,
+                                            Reply_Quantity = rp_Gp.Count(g => g.KindId == 4)
+                                         }
+                                     }
+                                 }).ToListAsync();
+            return (from rpt in reports
+                    join rpl in replies
+                    on rpt.RptId equals rpl.Report_Id
+                    select new Models.Application.ReportsAppInfo
+                    {
+                        Report = rpt,
+                        Replies = rpl.Replies
+                    }).ToList();
         }
 
-        // GET: api/BsOcurrenceReports/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<BsOcurrenceReport>> GetBsOcurrenceReport(int id)
+        [AllowAnonymous]
+        public async Task<ActionResult<Models.Application.ReportsAppInfo>> GetBsOcurrenceReport(int id)
         {
             var bsOcurrenceReport = await _context.BsOcurrenceReports.FindAsync(id);
+            if (bsOcurrenceReport == null) return NotFound();
 
-            if (bsOcurrenceReport == null)
+
+            var replies = await (from rp in _context.BsOcurrencesReplies
+                                 where rp.RptFk == id
+                                 group rp by rp.RptFk into rp_Gp
+                                 select new List<Models.Application.RepliesAppInfo>()
+                                 {
+                                         new Models.Application.RepliesAppInfo()
+                                         {
+                                            Reply_Type = 1,
+                                            Reply_Quantity = rp_Gp.Count(g => g.KindId == 1)
+                                         },
+                                         new Models.Application.RepliesAppInfo()
+                                         {
+                                            Reply_Type = 2,
+                                            Reply_Quantity = rp_Gp.Count(g => g.KindId == 2)
+                                         },
+                                         new Models.Application.RepliesAppInfo()
+                                         {
+                                            Reply_Type = 3,
+                                            Reply_Quantity = rp_Gp.Count(g => g.KindId == 3)
+                                         },
+                                         new Models.Application.RepliesAppInfo()
+                                         {
+                                            Reply_Type = 4,
+                                            Reply_Quantity = rp_Gp.Count(g => g.KindId == 4)
+                                         }
+                                 }).ToListAsync();
+
+            return new Models.Application.ReportsAppInfo
             {
-                return NotFound();
-            }
-
-            return bsOcurrenceReport;
+                Report = bsOcurrenceReport,
+                Replies = replies.FirstOrDefault()
+            };
         }
 
-        // PUT: api/BsOcurrenceReports/5
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPut("{id}")]
-        public async Task<IActionResult> PutBsOcurrenceReport(int id, BsOcurrenceReport bsOcurrenceReport)
-        {
-            if (id != bsOcurrenceReport.RptId)
-            {
-                return BadRequest();
-            }
-
-            _context.Entry(bsOcurrenceReport).State = EntityState.Modified;
-
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!BsOcurrenceReportExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
-
-            return NoContent();
-        }
-
-        // POST: api/BsOcurrenceReports
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
+        [Authorize]
         public async Task<ActionResult<BsOcurrenceReport>> PostBsOcurrenceReport(BsOcurrenceReport bsOcurrenceReport)
         {
             _context.BsOcurrenceReports.Add(bsOcurrenceReport);
@@ -83,12 +116,12 @@ namespace API.app360ki_services.Controllers
             return CreatedAtAction("GetBsOcurrenceReport", new { id = bsOcurrenceReport.RptId }, bsOcurrenceReport);
         }
 
-        // DELETE: api/BsOcurrenceReports/5
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteBsOcurrenceReport(int id)
+        [HttpDelete("{id},{userId}")]
+        [Authorize]
+        public async Task<IActionResult> DeleteBsOcurrenceReport(int id, int userId)
         {
             var bsOcurrenceReport = await _context.BsOcurrenceReports.FindAsync(id);
-            if (bsOcurrenceReport == null)
+            if (bsOcurrenceReport == null && bsOcurrenceReport.UsrgdOwnerFk == userId)
             {
                 return NotFound();
             }
@@ -99,9 +132,5 @@ namespace API.app360ki_services.Controllers
             return NoContent();
         }
 
-        private bool BsOcurrenceReportExists(int id)
-        {
-            return _context.BsOcurrenceReports.Any(e => e.RptId == id);
-        }
     }
 }

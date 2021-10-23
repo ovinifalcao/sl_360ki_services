@@ -1,11 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using API.app360ki_services.Models;
+using Microsoft.AspNetCore.Authorization;
 
 namespace API.app360ki_services.Controllers
 {
@@ -20,30 +18,8 @@ namespace API.app360ki_services.Controllers
             _context = context;
         }
 
-        // GET: api/BsOcurrencesReplies
-        [HttpGet]
-        public async Task<ActionResult<IEnumerable<BsOcurrencesReply>>> GetBsOcurrencesReplies()
-        {
-            return await _context.BsOcurrencesReplies.ToListAsync();
-        }
-
-        // GET: api/BsOcurrencesReplies/5
-        [HttpGet("{id}")]
-        public async Task<ActionResult<BsOcurrencesReply>> GetBsOcurrencesReply(int id)
-        {
-            var bsOcurrencesReply = await _context.BsOcurrencesReplies.FindAsync(id);
-
-            if (bsOcurrencesReply == null)
-            {
-                return NotFound();
-            }
-
-            return bsOcurrencesReply;
-        }
-
-        // PUT: api/BsOcurrencesReplies/5
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
+        [Authorize]
         public async Task<IActionResult> PutBsOcurrencesReply(int id, BsOcurrencesReply bsOcurrencesReply)
         {
             if (id != bsOcurrencesReply.RptFk)
@@ -72,9 +48,8 @@ namespace API.app360ki_services.Controllers
             return NoContent();
         }
 
-        // POST: api/BsOcurrencesReplies
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
+        [Authorize]
         public async Task<ActionResult<BsOcurrencesReply>> PostBsOcurrencesReply(BsOcurrencesReply bsOcurrencesReply)
         {
             _context.BsOcurrencesReplies.Add(bsOcurrencesReply);
@@ -97,8 +72,8 @@ namespace API.app360ki_services.Controllers
             return CreatedAtAction("GetBsOcurrencesReply", new { id = bsOcurrencesReply.RptFk }, bsOcurrencesReply);
         }
 
-        // DELETE: api/BsOcurrencesReplies/5
         [HttpDelete("{id}")]
+        [Authorize]
         public async Task<IActionResult> DeleteBsOcurrencesReply(int id)
         {
             var bsOcurrencesReply = await _context.BsOcurrencesReplies.FindAsync(id);

@@ -64,6 +64,7 @@
     <Build Include="kd_City_Zones.sql" />
     <Build Include="kd_Ocurrences_Replies.sql" />
     <Build Include="bs_Ocurrences_Replies.sql" />
+    <Build Include="op_User_Services.sql" />
   </ItemGroup>
   <ItemGroup>
     <None Include="InsertPrimaryData.sql" />

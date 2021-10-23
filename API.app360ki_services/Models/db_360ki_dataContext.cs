@@ -23,6 +23,7 @@ namespace API.app360ki_services.Models
         public virtual DbSet<KdCityZone> KdCityZones { get; set; }
         public virtual DbSet<KdOcurrence> KdOcurrences { get; set; }
         public virtual DbSet<KdOcurrencesReply> KdOcurrencesReplies { get; set; }
+        public virtual DbSet<OpUserService> OpUserServices { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -40,7 +41,7 @@ namespace API.app360ki_services.Models
             modelBuilder.Entity<BsOcurrenceReport>(entity =>
             {
                 entity.HasKey(e => e.RptId)
-                    .HasName("PK__bs_Ocurr__F6FF16C8CA067154");
+                    .HasName("PK__bs_Ocurr__F6FF16C818072571");
 
                 entity.ToTable("bs_Ocurrence_Report");
 
@@ -68,25 +69,25 @@ namespace API.app360ki_services.Models
                     .WithMany(p => p.BsOcurrenceReports)
                     .HasForeignKey(d => d.CityZoneId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__bs_Ocurre__CityZ__4316F928");
+                    .HasConstraintName("FK__bs_Ocurre__CityZ__45F365D3");
 
                 entity.HasOne(d => d.Kind)
                     .WithMany(p => p.BsOcurrenceReports)
                     .HasForeignKey(d => d.KindId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__bs_Ocurre__Kind___4222D4EF");
+                    .HasConstraintName("FK__bs_Ocurre__Kind___44FF419A");
 
                 entity.HasOne(d => d.UsrgdOwnerFkNavigation)
                     .WithMany(p => p.BsOcurrenceReports)
                     .HasForeignKey(d => d.UsrgdOwnerFk)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__bs_Ocurre__USRGD__412EB0B6");
+                    .HasConstraintName("FK__bs_Ocurre__USRGD__440B1D61");
             });
 
             modelBuilder.Entity<BsOcurrencesReply>(entity =>
             {
                 entity.HasKey(e => new { e.RptFk, e.UsrgdFk })
-                    .HasName("PK__bs_Ocurr__08FE82DEC71E2F98");
+                    .HasName("PK__bs_Ocurr__08FE82DE201F4AE6");
 
                 entity.ToTable("bs_Ocurrences_Replies");
 
@@ -102,19 +103,19 @@ namespace API.app360ki_services.Models
                     .WithMany(p => p.BsOcurrencesReplies)
                     .HasForeignKey(d => d.RptFk)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__bs_Ocurre__RPT_F__44FF419A");
+                    .HasConstraintName("FK__bs_Ocurre__RPT_F__47DBAE45");
 
                 entity.HasOne(d => d.UsrgdFkNavigation)
                     .WithMany(p => p.BsOcurrencesReplies)
                     .HasForeignKey(d => d.UsrgdFk)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__bs_Ocurre__USRGD__440B1D61");
+                    .HasConstraintName("FK__bs_Ocurre__USRGD__46E78A0C");
             });
 
             modelBuilder.Entity<BsUserResgistered>(entity =>
             {
                 entity.HasKey(e => e.UsrgdId)
-                    .HasName("PK__bs_User___E0188153C5DAB884");
+                    .HasName("PK__bs_User___E01881539FAF5E4D");
 
                 entity.ToTable("bs_User_Resgistered");
 
@@ -133,13 +134,13 @@ namespace API.app360ki_services.Models
                     .WithMany(p => p.BsUserResgistereds)
                     .HasForeignKey(d => d.CityZoneId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__bs_User_R__CityZ__45F365D3");
+                    .HasConstraintName("FK__bs_User_R__CityZ__48CFD27E");
             });
 
             modelBuilder.Entity<KdCityZone>(entity =>
             {
                 entity.HasKey(e => e.KdCtZnId)
-                    .HasName("PK__kd_City___52F4F9C65A2B2E02");
+                    .HasName("PK__kd_City___52F4F9C68663173A");
 
                 entity.ToTable("kd_City_Zones");
 
@@ -155,7 +156,7 @@ namespace API.app360ki_services.Models
             modelBuilder.Entity<KdOcurrence>(entity =>
             {
                 entity.HasKey(e => e.KdOcId)
-                    .HasName("PK__kd_Ocurr__077A6F1CA7A907AD");
+                    .HasName("PK__kd_Ocurr__077A6F1CEB086CF9");
 
                 entity.ToTable("kd_Ocurrences");
 
@@ -171,7 +172,7 @@ namespace API.app360ki_services.Models
             modelBuilder.Entity<KdOcurrencesReply>(entity =>
             {
                 entity.HasKey(e => e.KdOcRpId)
-                    .HasName("PK__kd_Ocurr__3529AB4F79918AFE");
+                    .HasName("PK__kd_Ocurr__3529AB4F98AEFB8F");
 
                 entity.ToTable("kd_Ocurrences_Replies");
 
@@ -182,6 +183,35 @@ namespace API.app360ki_services.Models
                     .HasMaxLength(50)
                     .IsUnicode(false)
                     .HasColumnName("Kd_Oc_Rp_Desc");
+            });
+
+            modelBuilder.Entity<OpUserService>(entity =>
+            {
+                entity.HasKey(e => e.UsrgdFk)
+                    .HasName("PK__op_User___E018D8DE08452EF8");
+
+                entity.ToTable("op_User_Services");
+
+                entity.HasIndex(e => e.PhoneNum, "UQ__op_User___75C2713A2EF2F6CC")
+                    .IsUnique();
+
+                entity.Property(e => e.UsrgdFk)
+                    .ValueGeneratedNever()
+                    .HasColumnName("USRGD_FK");
+
+                entity.Property(e => e.PhoneNum).HasColumnName("Phone_Num");
+
+                entity.Property(e => e.Wsp)
+                    .IsRequired()
+                    .HasMaxLength(100)
+                    .IsUnicode(false)
+                    .HasColumnName("WSP");
+
+                entity.HasOne(d => d.UsrgdFkNavigation)
+                    .WithOne(p => p.OpUserService)
+                    .HasForeignKey<OpUserService>(d => d.UsrgdFk)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK__op_User_S__USRGD__49C3F6B7");
             });
 
             OnModelCreatingPartial(modelBuilder);
